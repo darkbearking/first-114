@@ -1,0 +1,50 @@
+#下面的配置中：雖然這個配置的profiles的名字是slaveA，但是它並不是服務名，它只是配置文件的名字。
+#它真正的訪問地址，http://slave1:8761/eureka中的slave1，來源於hosts配置文件。
+#簡單來說，profiles名字僅僅是個名字而已。
+server:
+  port: 8761
+spring: 
+  application:
+    name: first-114
+  profiles: slaveA
+eureka:
+  client: 
+    #自己是注册中心，是否要将自己注册到注册中心去,集群的时候需要设置为true
+    register-with-eureka: true
+    #自己是注册中心，不需要去检索服务信息
+    fetch-registry: false
+    serviceUrl: 
+      defaultZone: http://slave2:8762/eureka/
+---
+server: 
+  port: 8762
+spring: 
+  application:
+    name: first-114
+  profiles: slaveB
+eureka: 
+  client: 
+    #自己是注册中心，是否要将自己注册到注册中心去,集群的时候需要设置为true
+    register-with-eureka: true
+    #自己是注册中心，不需要去检索服务信息
+    fetch-registry: false
+    serviceUrl: 
+      defaultZone: http://slave3:8763/eureka/
+---
+server: 
+  port: 8763
+spring: 
+  application:
+    name: first-114
+  profiles: slaveC
+eureka: 
+  client: 
+    #自己是注册中心，是否要将自己注册到注册中心去,集群的时候需要设置为true
+    register-with-eureka: true
+    #自己是注册中心，不需要去检索服务信息
+    fetch-registry: false
+    serviceUrl: 
+      defaultZone: http://slave1:8761/eureka/
+#雖然我們在上面的兩個profiles中都僅僅配置了對方的地址（如果有三個eureka服務端的話，那麼每個profiles也只需要隨機配置一個eureka服務端即可）
+#但是在服務頁面可以看到，每個eureka的服務端都可以註冊到所有的eureka服務端。
+#原理可以參照https://blog.csdn.net/tianyaleixiaowu/article/details/78184793這篇
